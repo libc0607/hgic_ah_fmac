@@ -1,4 +1,4 @@
-EXEC = hgota libnetat hgics hgicf hgpriv
+EXEC = hgota libnetat hgicf hgpriv
 
 CFLAGS += -D__linux__
 LDFLAGS += -lm
