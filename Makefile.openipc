@@ -1,0 +1,36 @@
+CONFIG_HGICF := m
+CONFIG_HGIC_USB := y
+
+hgicf-objs += hgic_fmac/ctrl.o
+hgicf-objs += hgic_fmac/core.o
+hgicf-objs += hgic_fmac/event.o
+hgicf-objs += hgic_fmac/procfs.o
+hgicf-objs += utils/fwdl.o
+hgicf-objs += utils/utils.o
+hgicf-objs += utils/fwctrl.o
+hgicf-objs += utils/ota.o
+hgicf-objs += utils/fwinfo.o
+hgicf-objs += utils/iwpriv.o
+hgicf-$(CONFIG_HGIC_SDIO) += utils/if_sdio.o
+hgicf-$(CONFIG_HGIC_USB)  += utils/if_usb.o
+obj-$(CONFIG_HGICF)     += hgicf.o
+
+all: modules
+
+modules: 
+	$(MAKE) -C $(KSRC) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) EXTRA_CFLAGS="-DCONFIG_HGIC_2G -DCONFIG_HGIC_USB -DCONFIG_SDIO_REINIT" modules
+	$(COMPILER)strip -g hgicf.ko
+
+install: 
+	mkdir -p $(MODDESTDIR)
+	install -p -m 644 hgicf.ko  $(MODDESTDIR)/
+	/sbin/depmod -a ${KVER}
+
+clean: 
+	@find ./ -name "*.o" | xargs rm -fv
+	@find ./ -name "*.ko" | xargs rm -fv
+	@find ./ -name "*.cmd" | xargs rm -fv
+	@find ./ -name "*.symvers" | xargs rm -fv
+	@find ./ -name "*.markers" | xargs rm -fv
+	@find ./ -name "*.order" | xargs rm -fv
+	@find ./ -name "*.mod.c" | xargs rm -fv
