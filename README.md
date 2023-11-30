@@ -1,6 +1,6 @@
 # hgic_ah_fmac
 Just a mirror to bypass the registration wall of Huge-IC's FullMAC 802.11ah (HaLow) Wireless Driver.   
-Current version: ```v2.2.1_25328```
+Current version: ```v2.2.1_26364```
 
 ## Intergrate to OpenIPC
 See [my branch of OpenIPC](https://github.com/libc0607/openipc-firmware)  
