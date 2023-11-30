@@ -55,7 +55,7 @@ static void hgic_copyto_iwreq(struct iwreq *wrqin, char *buf, int len)
 
 static int hgic_iwpriv_set_countryregion(struct hgic_fwctrl *ctrl, u8 ifidx, char *data, u32 count)
 {
-    if (data == NULL) {
+    if (data == NULL || strlen(data) != 2) {
         return -EINVAL;
     }
     return hgic_fwctrl_set_countryregion(ctrl, ifidx, data);
@@ -1126,6 +1126,7 @@ static int hgic_iwpriv_get_scan_list(struct hgic_fwctrl *ctrl, u8 ifidx, struct 
     int count = 0;
     int len = 0;
     struct hgic_bss_info *bss = NULL;
+    struct hgic_bss_info1 *bss1 = NULL;
     char *buf = kzalloc(1024, GFP_ATOMIC);
     char *print_buf = kzalloc(4096, GFP_ATOMIC);
 
@@ -1138,13 +1139,26 @@ static int hgic_iwpriv_get_scan_list(struct hgic_fwctrl *ctrl, u8 ifidx, struct 
     ret = hgic_fwctrl_get_scan_list(ctrl, ifidx, buf, 1024);
     if (ret > 0) {
         bss = (struct hgic_bss_info *)buf;
-        count = ret / sizeof(struct hgic_bss_info);
-        len += sprintf(print_buf + len, "\r\nBSSID            \tSSID      \tEncryption\tFrequence\tSignal\n");
-        for (i = 0; i < count; i++) {
-            len += sprintf(print_buf + len, "%pM\t%s\t%10s\t%10d\t%d\n",
-                           bss[i].bssid, bss[i].ssid,
-                           bss[i].encrypt ? (bss[i].encrypt == 1 ? "WPA" : "WPA2") : "NONE",
-                           bss[i].freq, bss[i].signal);
+        bss1 = (struct hgic_bss_info1 *)buf;
+        if (bss1[0].ver != 1) {
+            count = ret / sizeof(struct hgic_bss_info);
+            len += sprintf(print_buf + len, "\r\nBSSID            \tSSID      \tEncryption\tFrequence\tSignal\n");
+            for (i = 0; i < count; i++) {
+                len += sprintf(print_buf + len, "%pM\t%s\t %10s\t  %10d\t%d\n",
+                               bss[i].bssid, bss[i].ssid,
+                               bss[i].encrypt ? (bss[i].encrypt == 1 ? "WPA" : "WPA2") : "NONE",
+                               bss[i].freq, bss[i].signal);
+            }
+        } else {
+            count = ret / sizeof(struct hgic_bss_info1);
+            len += sprintf(print_buf + len, "\r\nBSSID            \tSSID      \tEncryption\tFrequence\tSignal\tCountry_region\n");
+            for (i = 0; i < count; i++) {
+                len += sprintf(print_buf + len, "%pM\t%s\t %10s\t  %10d\t%10d\t%10s\t%d\n",
+                               bss1[i].bssid, bss1[i].ssid,
+                               bss1[i].encrypt ? (bss1[i].encrypt == 1 ? "WPA" : "WPA2") : "NONE",
+                               bss1[i].freq, bss1[i].signal,
+                               bss1[i].country_region, bss1[i].bss_bw);
+            }
         }
         wrqin->u.data.length = (u16)len;
     } else {

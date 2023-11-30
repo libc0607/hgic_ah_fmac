@@ -69,9 +69,10 @@ enum hgic_bus_flag {
 
 #define hgic_pick_values(pick_type, str, array, size) do{\
         char *__ptr = NULL;\
+        char *__str = str; \
         memset(array, 0, size*sizeof(pick_type));\
         if((str) && strlen((str)) > 0){\
-            while ((__ptr = strsep((char **)&(str), ",")) != NULL) {\
+            while ((__ptr = strsep((char **)&(__str), ",")) != NULL) {\
                 if (argcnt >= size) break;\
                 array[argcnt++] = (pick_type)simple_strtol(__ptr, 0, 0);\
             }\

@@ -25,6 +25,16 @@ struct hgic_bss_info {
     unsigned short freq;
 };
 
+struct hgic_bss_info1 {
+    unsigned char bssid[6];
+    unsigned char ssid[32];
+    unsigned char encrypt: 6, ver: 2;
+    signed   char signal;
+    unsigned short freq;
+    unsigned char country_region[4];
+    unsigned char bss_bw;
+};
+
 struct hgic_fw_info {
     unsigned int version;
     unsigned int svn_version;
@@ -94,9 +104,11 @@ struct hgic_tx_info {
     unsigned char  band;
     unsigned char  tx_bw;
     unsigned char  tx_mcs;
-    unsigned char  antenna;
-    unsigned int tx_flags;
-    unsigned int tx_flags2;
+    unsigned char  freq_idx: 5, antenna: 3;
+    unsigned int   tx_flags;
+    unsigned short tx_flags2;
+    unsigned char  priority;
+    unsigned char  tx_power;
 };
 
 struct bt_rx_info {
@@ -239,7 +251,7 @@ enum hgic_cmd {
     HGIC_CMD_SET_MAC                =  3,   /* fmac/smac */
     HGIC_CMD_SET_SSID               =  4,   /* fmac */
     HGIC_CMD_SET_BSSID              =  5,   /* fmac */
-    HGIC_CMD_SET_COUNTERY           =  6,   /* fmac */
+    HGIC_CMD_SET_COUNTRY           	=  6,   /* fmac */
     HGIC_CMD_SET_CHANNEL            =  7,   /* fmac */
     HGIC_CMD_SET_CENTER_FREQ        =  8,   /* smac */
     HGIC_CMD_SET_RTS_THRESHOLD      =  9,   /* smac */

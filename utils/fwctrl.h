@@ -95,7 +95,7 @@ int hgic_fwctrl_set_primary_chan(struct hgic_fwctrl *ctrl, u8 ifidx, u8 primary_
 int hgic_fwctrl_set_aid(struct hgic_fwctrl *ctrl, u8 ifidx, u32 aid);
 int hgic_fwctrl_set_mac(struct hgic_fwctrl *ctrl, u8 ifidx, u8 *mac_addr);
 int hgic_fwctrl_get_scan_list(struct hgic_fwctrl *ctrl, u8 ifidx, u8 *buff, u32 size);
-int hgic_fwctrl_scan(struct hgic_fwctrl *ctrl, u8 ifidx);
+int hgic_fwctrl_scan(struct hgic_fwctrl *ctrl, u8 ifidx, u8 scan_cmd);
 int hgic_fwctrl_set_txq_param(struct hgic_fwctrl *ctrl, u8 ifidx, u8 ac, struct hgic_txq_param *param);
 int hgic_fwctrl_set_user_edca(struct hgic_fwctrl *ctrl, u8 ifidx, u8 ac, struct hgic_txq_param *param);
 int hgic_fwctrl_get_temperature(struct hgic_fwctrl *ctrl);

@@ -320,7 +320,7 @@ int hgic_fwctrl_get_fwinfo(struct hgic_fwctrl *ctrl, u8 ifidx, struct hgic_fw_in
 
 int hgic_fwctrl_set_countryregion(struct hgic_fwctrl *ctrl, u8 ifidx, u8 *country_code)
 {
-    return hgic_fwctrl_set_bytes(ctrl, ifidx, HGIC_CMD_SET_COUNTERY, country_code, STR_LEN(country_code));
+    return hgic_fwctrl_set_bytes(ctrl, ifidx, HGIC_CMD_SET_COUNTRY, country_code, STR_LEN(country_code));
 }
 
 int hgic_fwctrl_set_ssid(struct hgic_fwctrl *ctrl, u8 ifidx, u8 *ssid)
@@ -523,9 +523,9 @@ int hgic_fwctrl_get_scan_list(struct hgic_fwctrl *ctrl, u8 ifidx, u8 *buff, u32 
     return hgic_fwctrl_get_bytes(ctrl, ifidx, HGIC_CMD_GET_SCAN_LIST, buff, size);
 }
 
-int hgic_fwctrl_scan(struct hgic_fwctrl *ctrl, u8 ifidx)
+int hgic_fwctrl_scan(struct hgic_fwctrl *ctrl, u8 ifidx, u8 scan_cmd)
 {
-    return hgic_fwctrl_set_byte(ctrl, ifidx, HGIC_CMD_SCAN, 1);
+    return hgic_fwctrl_set_byte(ctrl, ifidx, HGIC_CMD_SCAN, scan_cmd);
 }
 
 int hgic_fwctrl_set_txq_param(struct hgic_fwctrl *ctrl, u8 ifidx, u8 ac, struct hgic_txq_param *param)

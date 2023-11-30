@@ -582,11 +582,11 @@ int hgic_iwpriv_unpair(char *ifname, char *mac)
 {
     return hgic_iwpriv_set_mac(ifname, "unpair", mac);
 }
-int hgic_iwpriv_scan(char *ifname)
+int hgic_iwpriv_scan(char *ifname, int scan_cmd)
 {
     char cmd[32];
     memset(cmd, 0, sizeof(cmd));
-    sprintf(cmd, "%s scan", ifname);
+    sprintf(cmd, "%s scan=%d", ifname, scan_cmd);
     return hgic_iwpriv_do(cmd, 0, 0, 0, 0);
 }
 int hgic_iwpriv_save(char *ifname)
@@ -1397,3 +1397,7 @@ int hgic_iwpriv_get_signal(char *ifname)
     return hgic_iwpriv_get_int(ifname, "signal");
 }
 
+int hgic_iwpriv_set_countryregion(char *ifname, char country[2])
+{
+    return hgic_iwpriv_set_bytes(ifname, "country_region", country, 2);
+}

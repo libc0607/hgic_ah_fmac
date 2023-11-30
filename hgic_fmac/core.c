@@ -757,9 +757,7 @@ static int hgicf_download_fw(struct hgicf_wdev *hg)
         }
     }
 
-    if (!no_bootdl && hg->bus->reinit && test_bit(HGIC_BUS_FLAGS_NOPOLL, &hg->bus->flags)) {
-        mod_timer(&hg->detect_tmr, jiffies + msecs_to_jiffies(HGIC_DETECT_TIMER * 4));
-    }
+    mod_timer(&hg->detect_tmr, jiffies + msecs_to_jiffies(HGIC_DETECT_TIMER));
     hg->fw_state = status;
     return (status == STATE_FW);
 }
@@ -885,9 +883,12 @@ static void hgicf_probe_post(void *priv)
 static int hgicf_core_suspend(void *hgobj)
 {
     int err = 0;
+    u32 vals[2] = {1, 0xffffffff};
     struct hgicf_wdev *hg = (struct hgicf_wdev *)hgobj;
     if (!test_bit(HGIC_BUS_FLAGS_SLEEP, &hg->bus->flags)) {
-        err = hgic_fwctrl_enter_sleep(&hg->ctrl, HGIC_WDEV_ID_STA, 1, 0xffffffff);
+        if(hg->fwinfo.version < 0x02000000) vals[0] = 0xffff;
+        hgic_dbg("enter sleep : type:%d, sleep_ms:%d ...\r\n", vals[0], vals[1]);
+        err = hgic_fwctrl_enter_sleep(&hg->ctrl, HGIC_WDEV_ID_STA, vals[0], vals[1]);
     }
     return err;
 }

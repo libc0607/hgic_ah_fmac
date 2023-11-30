@@ -179,8 +179,9 @@ static ssize_t hgicf_iwpriv_write(struct file *file, const char __user *buffer,
                     return -EINVAL;
                 }
             }
-        } else if (strcasecmp(cmd, "scan") == 0) {
-            ret = hgic_fwctrl_scan(&hg->ctrl, vif->fwifidx);
+        } else if (strncasecmp(cmd, "scan", 4) == 0) {
+            char *ptr = strchr(cmd, '=');
+            ret = hgic_fwctrl_scan(&hg->ctrl, vif->fwifidx, (ptr ? (u8)simple_strtol(ptr+1, 0, 10) : 1));
         } else if (strcasecmp(cmd, "save") == 0) {
             ret = hgic_fwctrl_save_cfg(&hg->ctrl, vif->fwifidx);
 #if 0

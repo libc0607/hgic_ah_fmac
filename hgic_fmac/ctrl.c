@@ -58,7 +58,7 @@ int hgicf_ioctl_savecfg(struct net_device *dev, struct iwreq *wrqin)
 int hgicf_ioctl_scan(struct net_device *dev, struct iwreq *wrqin)
 {
     struct hgicf_vif *vif = (struct hgicf_vif *)netdev_priv(dev);
-    return hgic_fwctrl_scan(&(vif->hg->ctrl), vif->fwifidx);
+    return hgic_fwctrl_scan(&(vif->hg->ctrl), vif->fwifidx, 1);
 }
 
 int hgicf_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
